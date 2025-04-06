@@ -1,0 +1,32 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: 'coolband-db'
+
+    ports:
+      - "5432:1432"
+    environment:
+      POSTGRES_DB: coolband
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    user: "postgres"
+  java:
+    build: ./
+    container_name: 'coolband-java'
+    volumes:
+      - ..:/app
+      - media_volume:/usr/src/app/java_media
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+
+volumes:
+  postgres_data:
+  media_volume:
